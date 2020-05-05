@@ -2,12 +2,10 @@ import 'dart:convert';
 import 'package:exaplecounter/Login.dart';
 import 'package:exaplecounter/user.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
   SignUp({Key key}) : super(key: key);
-
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -112,43 +110,6 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
-
-  Future<List<UserData>> getData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final emails = prefs.getStringList('emails');
-    final passwords = prefs.getStringList('passwords');
-    List<UserData> usuarios = new List();
-    try {
-      for (var i = 0; i < emails.length; i++) {
-        usuarios.add(new UserData(emails[i], passwords[i], null, null, null));
-      }
-    } catch (e) {}
-
-    return usuarios;
-  }
-
-  void saveLocal(List<UserData> users) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('emails', getEmails(users));
-    prefs.setStringList('passwords', getPasswords(users));
-  }
-
-  List<String> getEmails(List<UserData> allUsers) {
-    List<String> emails = new List();
-    for (var item in allUsers) {
-      emails.add(item.email);
-    }
-    return emails;
-  }
-
-  List<String> getPasswords(List<UserData> allUsers) {
-    List<String> passwords = new List();
-    for (var item in allUsers) {
-      passwords.add(item.password);
-    }
-    return passwords;
-  }
-
   Future signUpAPI(
       String email, String password, String username, String name) async {
     print(email);

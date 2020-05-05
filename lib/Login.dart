@@ -14,7 +14,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  @override
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final emailController = TextEditingController();
@@ -106,7 +105,7 @@ class _LoginState extends State<Login> {
     );
     if (response.statusCode == 200) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text('Welcome to the jungle, we have got fun and games'),
+        content: Text('Welcome'),
         duration: Duration(seconds: 1),
       ));
       var data = jsonDecode(response.body);
@@ -115,7 +114,7 @@ class _LoginState extends State<Login> {
       print("signup failed");
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         content:
-            Text('Sorry Bro you are not allowed to enter to the Jungle :('),
+            Text('Emai or password incorrect'),
         duration: Duration(seconds: 1),
       ));
       return null;
