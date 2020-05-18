@@ -133,6 +133,7 @@ class _SignUpState extends State<SignUp> {
         content: Text('User Created'),
         duration: Duration(seconds: 1),
       ));
+      await new Future.delayed(const Duration(seconds : 3));
     } else {
       print("signup failed");
       _scaffoldKey.currentState.showSnackBar(SnackBar(

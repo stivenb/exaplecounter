@@ -18,80 +18,124 @@ class _LoginState extends State<Login> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _loading = true;
+  bool monVal = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: new AppBar(
-        title: new Text('Sign In'),
-      ),
-      body: ListView(
-        children: <Widget>[
-          Form(
-              key: _formKey,
-              child: Column(children: <Widget>[
-                new Padding(
-                  padding: EdgeInsets.all(10),
-                  child: TextFormField(
-                    controller: emailController,
-                    decoration: new InputDecoration(hintText: 'Email'),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
+        key: _scaffoldKey,
+        appBar: new AppBar(
+          title: new Text('Sign In'),
+        ),
+        body: show());
+  }
+
+  Widget show() {
+    return ListView(
+      children: <Widget>[
+        _loading == true
+            ? Form(
+                key: _formKey,
+                child: Column(children: <Widget>[
+                  new Padding(
+                    padding: EdgeInsets.all(10),
+                    child: TextFormField(
+                      controller: emailController,
+                      decoration: new InputDecoration(hintText: 'Email'),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
+                  new Padding(
+                    padding: EdgeInsets.all(10),
+                    child: TextFormField(
+                      controller: passwordController,
+                      decoration: new InputDecoration(hintText: 'password'),
+                      obscureText: true,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                    ),
+                  )
+                ]))
+            : Padding(
+                padding: EdgeInsets.all(20),
+                child: new Center(
+                  child: new CircularProgressIndicator(),
                 ),
-                new Padding(
-                  padding: EdgeInsets.all(10),
-                  child: TextFormField(
-                    controller: passwordController,
-                    decoration: new InputDecoration(hintText: 'password'),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                )
-              ])),
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Consumer<UserSession>(
-              builder: (context, usersession, child) => RaisedButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    signInAPI(emailController.text, passwordController.text)
-                        .then((ret) {
-                      if (ret != null) {
+              ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text("Remember session"),
+            Checkbox(
+              value: monVal,
+              onChanged: (bool value) {
+                setState(() {
+                  monVal = value;
+                });
+              },
+            ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: Consumer<UserSession>(
+            builder: (context, usersession, child) => RaisedButton(
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  setState(() {
+                    _loading = false;
+                  });
+                  signInAPI(emailController.text, passwordController.text)
+                      .then((ret) {
+                    if (ret != null) {
+                      if (monVal) {
                         Provider.of<UserSession>(context, listen: false)
                             .createSession(ret.email, ret.password, ret.name,
                                 ret.token, ret.userName);
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (BuildContext context) => Home()));
+                      } else {
+                        Provider.of<UserSession>(context, listen: false)
+                            .createSession2(ret.email, ret.password, ret.name,
+                                ret.token, ret.userName);
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (BuildContext context) => Home()));
                       }
-                    });
-                  }
-                },
-                child: new Text('Sign in'),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: RaisedButton(
-              onPressed: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => SignUp()));
+                      setState(() {
+                        _loading = true;
+                      });
+                    } else {
+                      setState(() {
+                        _loading = true;
+                      });
+                    }
+                  });
+                }
               },
-              child: Text('Sign Up'),
+              child: new Text('Sign in'),
             ),
           ),
-        ],
-      ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: RaisedButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) => SignUp()));
+            },
+            child: Text('Sign Up'),
+          ),
+        ),
+      ],
     );
   }
 
@@ -109,12 +153,12 @@ class _LoginState extends State<Login> {
         duration: Duration(seconds: 1),
       ));
       var data = jsonDecode(response.body);
-      return new UserData(email, password,data['name'],data['token'],data['username']);
+      return new UserData(
+          email, password, data['name'], data['token'], data['username']);
     } else {
       print("signup failed");
       _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content:
-            Text('Emai or password incorrect'),
+        content: Text('Email or password incorrect'),
         duration: Duration(seconds: 1),
       ));
       return null;

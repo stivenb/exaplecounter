@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:exaplecounter/Home.dart';
 import 'package:exaplecounter/SignUp.dart';
 import 'package:exaplecounter/user.dart';
@@ -11,7 +10,6 @@ import 'package:http/http.dart' as http;
 
 class RootPage extends StatefulWidget {
   RootPage({Key key}) : super(key: key);
-
   @override
   _RootPageState createState() => _RootPageState();
 }
@@ -45,10 +43,8 @@ class _RootPageState extends State<RootPage> {
 
   Widget _whatshow(UserData session) {
     if (session == null) {
-      //print('es nulo');
       return SignUp();
     } else {
-      //print(' no es nulo');
       return Home();
     }
   }

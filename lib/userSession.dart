@@ -11,7 +11,11 @@ class UserSession with ChangeNotifier {
     saveSession(mySession);
     notifyListeners();
   }
-
+  void createSession2(String email, String password, String name, String token,
+      String userName) {
+    mySession = new UserData(email, password, name, token, userName);
+    notifyListeners();
+  }
   void closeSession() {
     mySession = null;
     deleteSession();
