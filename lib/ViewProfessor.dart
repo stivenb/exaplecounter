@@ -86,9 +86,6 @@ class _ViewProfessorState extends State<ViewProfessor> {
           MaterialPageRoute(builder: (BuildContext context) => RootPage()));
       return null;
     } else {
-      //Map<String, dynamic> body = json.decode(response.body);
-      //String error = body['error'];
-      //print('error  $error');
       return null;
     }
   }

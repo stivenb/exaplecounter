@@ -68,31 +68,6 @@ class _HomeState extends State<Home> {
                   }
                 },
               )),
-      /*ListView(
-        children: <Widget>[
-          Consumer<UserSession>(
-            builder: (context, usersession, child) =>
-                new Text('Email: ${usersession.mySession.email}'),
-          ),
-          Consumer<UserSession>(
-            builder: (context, usersession, child) =>
-                new Text('Name: ${usersession.mySession.name}'),
-          ),
-          Consumer<UserSession>(
-            builder: (context, usersession, child) =>
-                new Text('UserName: ${usersession.mySession.userName}'),
-          ),
-          
-          RaisedButton(
-            onPressed: () {
-              Provider.of<UserSession>(context, listen: false).closeSession();
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) => RootPage()));
-            },
-            child: new Text('Cerrar sesion'),
-          )
-        ],
-      ),*/
     );
   }
 
@@ -139,13 +114,10 @@ class _HomeState extends State<Home> {
         'showCoursesService username $username token $token => ${response.statusCode}');
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      //return UserInfo.fromJson(json.decode(response.body));
 
       for (Map i in data) {
-        //print('course $i');
         couseList.add(Course.fromJson(i));
       }
-      //print('showCoursesService length ${couseList.length}');
     } else {
       print('Error');
       Provider.of<UserSession>(context, listen: false).closeSession();

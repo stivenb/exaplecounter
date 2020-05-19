@@ -6,7 +6,6 @@ class StudentDetail {
   String email;
   String city;
   String country;
-  //DateTime birthday;
 
   StudentDetail(
       {this.id,
@@ -16,7 +15,6 @@ class StudentDetail {
       this.email,
       this.city,
       this.country});
-      //this.birthday
 
   StudentDetail.initial()
       : id = 0,
@@ -26,7 +24,6 @@ class StudentDetail {
         email = '',
         city = '',
         country = '';
-        //birthday = DateTime.;
   StudentDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
@@ -35,6 +32,5 @@ class StudentDetail {
     email = json['email'];
     city = json['city'];
     country = json['country'];
-    //birthday = json['birthday'];
   }
 }
