@@ -92,7 +92,6 @@ class _ViewCourseState extends State<ViewCourse> {
   }
 
   Widget _generalInfo(Course course) {
-    //CourseDetail courseDetail;
     if (myDetails != null) {
       return new Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,9 +154,11 @@ class _ViewCourseState extends State<ViewCourse> {
     print(response.body);
     if (response.statusCode == 200) {
       CourseDetail detail = CourseDetail.fromJson(json.decode(response.body));
-      setState(() {
-        myDetails = detail;
-      });
+      if (this.mounted) {
+        setState(() {
+          myDetails = detail;
+        });
+      }
       return detail;
     } else if (response.statusCode == 401) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -170,9 +171,6 @@ class _ViewCourseState extends State<ViewCourse> {
           MaterialPageRoute(builder: (BuildContext context) => RootPage()));
       return null;
     } else {
-      //Map<String, dynamic> body = json.decode(response.body);
-      //String error = body['error'];
-      //print('error  $error');
       return null;
     }
   }
